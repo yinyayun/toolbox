@@ -7,7 +7,7 @@ import java.util.List;
 import org.yinyayun.common.Dimension;
 
 /**
- * KD树，只有叶子节点有数据
+ * KD树
  * 
  * @author yinyayun
  *
@@ -29,6 +29,9 @@ public class KDTree {
 	 * @param depth
 	 */
 	public Node buildKDTree(Dimension[] p, int depth) {
+		if (p.length == 0 || p == null) {
+			return null;
+		}
 		if (p.length == 1) {
 			return new Node(p[0]);
 		}
@@ -38,15 +41,15 @@ public class KDTree {
 		long l = depth % 2 == 1 ? splits[1][0].x : splits[1][0].y;
 		// 递归构建左右子树
 		Node left = buildKDTree(splits[0], depth + 1);
-		Node right = buildKDTree(splits[1], depth + 1);
-		return new Node(left, right, l);
+		Node right = buildKDTree(splits[2], depth + 1);
+		return new Node(left, right, splits[1][0], l);
 	}
 
-	public void searchKDTree(Node root, List<Dimension> r) {
-		// 叶子节点
-		if (root.data != null) {
-
+	public void searchKDTree(Node root, Dimension p, int depth) {
+		if (root == null) {
+			return;
 		}
+		searchKDTree(root, p, depth);
 	}
 
 	/**
@@ -60,8 +63,12 @@ public class KDTree {
 		Comparator<Dimension> c = (c1, c2) -> vertical ? (int) (c1.x - c2.x) : (int) (c1.y - c2.y);
 		Arrays.sort(p, c);
 		Dimension[] p1 = Arrays.copyOfRange(p, 0, p.length / 2);
-		Dimension[] p2 = Arrays.copyOfRange(p, p.length / 2, p.length);
-		return new Dimension[][] { p1, p2 };
+		Dimension[] p2 = Arrays.copyOfRange(p, p.length / 2, p.length / 2 + 1);
+		Dimension[] p3 = null;
+		if (p.length / 2 + 1 < p.length) {
+			p3 = Arrays.copyOfRange(p, p.length / 2 + 1, p.length);
+		}
+		return new Dimension[][] { p1, p2, p3 };
 	}
 
 	public static class Node {
@@ -70,9 +77,10 @@ public class KDTree {
 		public long l;// 中间值
 		public Dimension data;
 
-		public Node(Node left, Node right, long l) {
+		public Node(Node left, Node right, Dimension data, long l) {
 			this.left = left;
 			this.right = right;
+			this.data = data;
 			this.l = l;
 		}
 
