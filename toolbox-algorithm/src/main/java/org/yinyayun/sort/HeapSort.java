@@ -9,14 +9,13 @@ import java.util.Comparator;
  *
  * @param <T>
  */
-public class HeapSort<T> {
-	private Comparator<T> c;
-
+public class HeapSort<T> extends Sort<T> {
 	public HeapSort(Comparator<T> c) {
-		this.c = c;
+		super(c);
 	}
 
-	public T[] heapSort(T[] array, Comparator<T> c) {
+	@Override
+	public void sort(T[] array) {
 		// n/2对应节点为最后叶子节点的父节点
 		// 依次将最大/最小节点从叶子向上移动，初步构建一个最大/最小堆
 		for (int i = array.length / 2; i >= 0; i--) {
@@ -28,7 +27,6 @@ public class HeapSort<T> {
 			swap(array, 0, i);
 			down(array, 0, i);
 		}
-		return array;
 	}
 
 	private void down(T[] array, int pos, int length) {
@@ -45,12 +43,6 @@ public class HeapSort<T> {
 				break;
 			}
 		}
-	}
-
-	public void swap(T[] array, int i, int j) {
-		T temp = array[i];
-		array[i] = array[j];
-		array[j] = temp;
 	}
 
 	public void printTree(T[] array) {
@@ -75,4 +67,5 @@ public class HeapSort<T> {
 		}
 		return builder.toString();
 	}
+
 }
