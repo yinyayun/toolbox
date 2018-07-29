@@ -2,6 +2,8 @@ package org.yinyayun.sort;
 
 import java.util.Comparator;
 
+import org.yinyayun.sort.abs.Sort;
+
 /**
  * 快速排序的核心思想：<br>
  * （1）设置基准 （2）从后向前找比基准小位置 （3）从前向后找比基准大的位置 （4）交换位置 <br>

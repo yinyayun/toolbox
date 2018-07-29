@@ -2,9 +2,12 @@ package org.yinyayun.sort;
 
 import java.util.Comparator;
 
+import org.yinyayun.sort.abs.Sort;
+
 /**
  * 堆排序
- * 
+ * （1）构建最大/最小堆，即从最后一个子树开始，保证当前子树的最大/最小元素在父节点上，经过多次迭代，根节点为为最大最小元素
+ * （2）根节点与最后一个节点交换，同时最后一个叶子节点之前的树构建最大最小堆（依次重复操作2）
  * @author yinyayun
  *
  * @param <T>

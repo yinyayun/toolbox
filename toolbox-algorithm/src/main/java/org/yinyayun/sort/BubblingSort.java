@@ -2,6 +2,15 @@ package org.yinyayun.sort;
 
 import java.util.Comparator;
 
+import org.yinyayun.sort.abs.Sort;
+
+/**
+ * 冒泡排序 思想：n次循环，每次循环调整相邻两个对象的位置，每进行完一次内循环，将最大或最小的元素移到末尾
+ * 
+ * @author yinyayun
+ *
+ * @param <T>
+ */
 public class BubblingSort<T> extends Sort<T> {
 	public BubblingSort(Comparator<T> c) {
 		super(c);

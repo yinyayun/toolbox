@@ -2,6 +2,15 @@ package org.yinyayun.sort;
 
 import java.util.Comparator;
 
+import org.yinyayun.sort.abs.Sort;
+
+/**
+ * 插入排序
+ * 
+ * @author yinyayun
+ *
+ * @param <T>
+ */
 public class InsertSort<T> extends Sort<T> {
 
 	public InsertSort(Comparator<T> c) {

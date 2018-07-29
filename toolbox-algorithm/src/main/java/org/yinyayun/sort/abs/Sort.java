@@ -1,4 +1,4 @@
-package org.yinyayun.sort;
+package org.yinyayun.sort.abs;
 
 import java.util.Comparator;
 
