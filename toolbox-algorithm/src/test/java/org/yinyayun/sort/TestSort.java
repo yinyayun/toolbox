@@ -5,7 +5,6 @@ import java.util.Comparator;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.yinyayun.sort.abs.Sort;
 
@@ -52,4 +51,14 @@ public class TestSort {
 		Assert.assertTrue(equal(array, maxArray));
 	}
 
+	/**
+	 * 插入排序
+	 */
+	@Test
+	public void testInsertSort() {
+		System.out.println("InsertSort>>>>>>");
+		Sort<Integer> sort = new InsertSort<Integer>(maxCompare);
+		sort.sort(array);
+		Assert.assertTrue(equal(array, maxArray));
+	}
 }

@@ -18,14 +18,15 @@ public class InsertSort<T> extends Sort<T> {
 	}
 
 	/**
-	 * 基准位置从1开始，向后移动;由基准位置与他前面的有序集合对比更换位置
+	 * 基准位置从1开始，向后移动;<br>
+	 * 由基准位置与他前面的有序集合对比更换位置
 	 */
 	@Override
 	public void sort(T[] array) {
 		for (int i = 1; i < array.length; i++) {
 			T base = array[i];
 			int j = i - 1;
-			for (; j >= 0 && c.compare(base, array[j]) < 0; j--) {
+			for (; j >= 0 && c.compare(base, array[j]) > 0; j--) {
 				array[j + 1] = array[j];
 			}
 			array[j + 1] = base;
