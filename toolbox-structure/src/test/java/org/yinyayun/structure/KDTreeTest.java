@@ -1,6 +1,6 @@
-package org.yinyayun;
+package org.yinyayun.structure;
 
-import org.yinyayun.common.Dimension;
+import org.yinyayun.structure.common.Dimension;
 import org.yinyayun.structure.tree.kd.KDTree;
 import org.yinyayun.structure.tree.kd.KDTree.Node;
 

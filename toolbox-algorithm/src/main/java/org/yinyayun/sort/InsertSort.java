@@ -19,7 +19,7 @@ public class InsertSort<T> extends Sort<T> {
 
 	/**
 	 * 基准位置从1开始，向后移动;<br>
-	 * 由基准位置与他前面的有序集合对比更换位置
+	 * 由基准位置与他前面的`集合对比更换位置
 	 */
 	@Override
 	public void sort(T[] array) {

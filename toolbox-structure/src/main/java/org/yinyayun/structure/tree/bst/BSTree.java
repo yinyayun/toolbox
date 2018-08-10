@@ -1,5 +1,5 @@
 
-package org.yinyayun.structure.bst;
+package org.yinyayun.structure.tree.bst;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,6 +8,13 @@ import java.util.Queue;
 
 import org.yinyayun.structure.tree.rb.RBNode;
 
+/**
+ * 二叉搜索树
+ * 
+ * @author yinyayun
+ *
+ * @param <T>
+ */
 public class BSTree<T> {
 	public static void main(String[] args) {
 		BSTree<Integer> tree = new BSTree<Integer>();
@@ -40,17 +47,17 @@ public class BSTree<T> {
 		return insert(temp, key, data);
 	}
 
-	protected BSTNode<T> insert(BSTNode<T> root, int key, T data) {
-		if (root == null) {
+	protected BSTNode<T> insert(BSTNode<T> node, int key, T data) {
+		if (node == null) {
 			++nodeSize;
 			return new BSTNode<T>(key, data);
 		}
-		if (key < root.key) {
-			root.left = insert(root.left, key, data);
-		} else if (key > root.key) {
-			root.right = insert(root.right, key, data);
+		if (key < node.key) {
+			node.left = insert(node.left, key, data);
+		} else if (key > node.key) {
+			node.right = insert(node.right, key, data);
 		}
-		return root;
+		return node;
 
 	}
 

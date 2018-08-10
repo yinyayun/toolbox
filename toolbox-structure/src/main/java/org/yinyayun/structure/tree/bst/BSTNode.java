@@ -1,4 +1,4 @@
-package org.yinyayun.structure.bst;
+package org.yinyayun.structure.tree.bst;
 
 public class BSTNode<T> {
 	public int key;

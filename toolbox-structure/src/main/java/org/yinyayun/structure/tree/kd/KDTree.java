@@ -2,12 +2,11 @@ package org.yinyayun.structure.tree.kd;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
-import org.yinyayun.common.Dimension;
+import org.yinyayun.structure.common.Dimension;
 
 /**
- * KD树
+ * KD树,每一层选这一个维度进行数据的划分，中间节点或者根节点保存数据划分的信息
  * 
  * @author yinyayun
  *
@@ -29,7 +28,7 @@ public class KDTree {
 	 * @param depth
 	 */
 	public Node buildKDTree(Dimension[] p, int depth) {
-		if (p.length == 0 || p == null) {
+		if (p == null || p.length == 0) {
 			return null;
 		}
 		if (p.length == 1) {

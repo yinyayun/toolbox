@@ -7,6 +7,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>toolbox-algorithm</module>
+		<module>toolbox-structure</module>
 	</modules>
 	<dependencies>
 		<dependency>

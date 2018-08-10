@@ -1,7 +1,7 @@
 package org.yinyayun.structure.tree.rb;
 
-import org.yinyayun.structure.bst.BSTNode;
-import org.yinyayun.structure.bst.BSTree;
+import org.yinyayun.structure.tree.bst.BSTNode;
+import org.yinyayun.structure.tree.bst.BSTree;
 
 /**
  * 红黑树<br>

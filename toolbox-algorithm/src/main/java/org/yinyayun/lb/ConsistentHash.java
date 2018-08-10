@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 一致性HASH
+ * 简单的一致性HASH
  * 
  * @author yinyayun
  *

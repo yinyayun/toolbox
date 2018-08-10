@@ -1,4 +1,4 @@
-package org.yinyayun;
+package org.yinyayun.structure;
 
 import org.junit.Test;
 import org.yinyayun.structure.tree.avl.AVLTree;

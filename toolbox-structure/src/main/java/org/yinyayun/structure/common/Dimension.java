@@ -1,4 +1,4 @@
-package org.yinyayun.common;
+package org.yinyayun.structure.common;
 
 /**
  * 维度
