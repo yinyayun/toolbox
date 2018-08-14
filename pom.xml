@@ -8,6 +8,7 @@
 	<modules>
 		<module>toolbox-algorithm</module>
 		<module>toolbox-structure</module>
+		<module>toolbox-other</module>
 	</modules>
 	<dependencies>
 		<dependency>
