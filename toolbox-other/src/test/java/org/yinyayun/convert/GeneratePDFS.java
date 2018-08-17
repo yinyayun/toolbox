@@ -61,7 +61,7 @@ public class GeneratePDFS {
 	public static void parserAndSave(String dir, String pdfName, String baseUrl, Element element) throws IOException {
 		File dest = new File(dir, pdfName);
 		if (dest.exists()) {
-			System.out.println(pdfName + "已经存在，跳过");
+			System.out.println(pdfName + "已经存在，跳过！");
 			return;
 		}
 		Elements resources = element.getElementsByTag("a");
