@@ -1,0 +1,164 @@
+package org.yinyayun.convert;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.jsoup.Connection;
+import org.jsoup.helper.HttpConnection;
+
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.html2pdf.attach.impl.OutlineHandler;
+import com.itextpdf.html2pdf.css.media.MediaDeviceDescription;
+import com.itextpdf.html2pdf.css.media.MediaType;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.utils.PdfMerger;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.IBlockElement;
+import com.itextpdf.layout.element.IElement;
+import com.itextpdf.layout.font.FontProvider;
+
+/**
+ * 将HTML转PDF
+ * 
+ * @author yinyayun
+ *
+ */
+public class Html2PDF {
+	public static int TIMEOUT = 15000;
+
+	public static Connection createConnection(String url) {
+		Connection conn = HttpConnection.connect(url);
+		conn.timeout(TIMEOUT);
+		conn.maxBodySize(5000);
+		return conn;
+	}
+
+	/**
+	 * 一些HTML中含有富文本，富文本对应的链接为相对路径，所以需要指定基础路径
+	 * 
+	 * @param baseUri
+	 * @return
+	 */
+	public static ConverterProperties properties(String baseUri) {
+		ConverterProperties properties = new ConverterProperties();
+		FontProvider font = new FontProvider();
+		font.addStandardPdfFonts();
+		// STSong-Light
+		font.addFont("STSong-Light", "UniGB-UCS2-H");// 你的字体文件
+		properties.setFontProvider(font);
+		// set media print style
+		MediaDeviceDescription mediaDeviceDescription = new MediaDeviceDescription(MediaType.SCREEN);
+		properties.setMediaDeviceDescription(mediaDeviceDescription);
+		properties.setCharset("utf-8");
+		// 设置基础URL
+		properties.setBaseUri(baseUri);
+		//
+		properties.setOutlineHandler(OutlineHandler.createStandardHandler());
+		// properties.setTagWorkerFactory(new DefaultTagWorkerFactory());
+		//
+		return properties;
+	}
+
+	/**
+	 * PS:此方式无法生成书签
+	 * 
+	 * @param urls
+	 * @param dest
+	 * @throws IOException
+	 */
+	public static void remoteHtmlToPDF(String[] urls, String dest) throws IOException {
+		ConverterProperties properties = properties(null);
+		try (PdfWriter writer = new PdfWriter(dest)) {
+			PdfDocument pdf = new PdfDocument(writer);
+			try (Document document = new Document(pdf)) {
+				for (String url : urls) {
+					System.out.println("转换" + url);
+					org.jsoup.nodes.Document doc = createConnection(url).get();
+					properties.setBaseUri(doc.baseUri());
+					List<IElement> elements = HtmlConverter.convertToElements(doc.html(), properties);
+					for (IElement element : elements) {
+						document.add((IBlockElement) element);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 采用PdfDocument进行过渡，之后合并，该方式可以生成书签
+	 * 
+	 * @param urls
+	 * @param dest
+	 * @throws IOException
+	 */
+	public static void remotePdfsToPDF(String[] urls, String dest) throws IOException {
+		ConverterProperties properties = properties(null);
+		PdfWriter writer = new PdfWriter(dest);
+		PdfDocument pdf = new PdfDocument(writer);
+		PdfMerger merger = new PdfMerger(pdf);
+		for (String url : urls) {
+			//
+			System.out.println("转换" + url);
+			org.jsoup.nodes.Document doc = createConnection(url).get();
+			properties.setBaseUri(doc.baseUri());
+			//
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			PdfDocument temp = new PdfDocument(new PdfWriter(baos));
+			HtmlConverter.convertToPdf(doc.html(), temp, properties);
+			temp = new PdfDocument(new PdfReader(new ByteArrayInputStream(baos.toByteArray())));
+			merger.merge(temp, 1, temp.getNumberOfPages());
+			temp.close();
+		}
+		pdf.close();
+	}
+
+	/**
+	 * 一起生成PDF
+	 * 
+	 * @param baseUri
+	 * @param src
+	 * @param dest
+	 * @throws IOException
+	 */
+	public static void LocalHtmlsToPDF(String baseUri, String[] src, String dest) throws IOException {
+		ConverterProperties properties = properties(baseUri);
+		try (PdfWriter writer = new PdfWriter(dest)) {
+			PdfDocument pdf = new PdfDocument(writer);
+			try (Document document = new Document(pdf)) {
+				for (String html : src) {
+					List<IElement> elements = HtmlConverter.convertToElements(new FileInputStream(html), properties);
+					for (IElement element : elements) {
+						document.add((IBlockElement) element);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 合并已有的多个PDF
+	 * 
+	 * @param baseUri
+	 * @param src
+	 * @param dest
+	 * @throws IOException
+	 */
+	public static void mergePDFS(File[] pdfs, String dest) throws IOException {
+		PdfWriter writer = new PdfWriter(dest);
+		try (PdfDocument pdf = new PdfDocument(writer)) {
+			PdfMerger merger = new PdfMerger(pdf);
+			for (File pdfFile : pdfs) {
+				PdfDocument temp = new PdfDocument(new PdfReader(pdfFile));
+				merger.merge(temp, 1, temp.getNumberOfPages());
+				temp.close();
+			}
+		}
+	}
+}
