@@ -3,7 +3,10 @@ package org.yinyayun.convert;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -18,10 +21,21 @@ import org.yinyayun.util.Utils;
  *
  */
 public class GeneratePDFS {
+	// private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
+	// new String[] { "java", "web", "mysql", "spring", "jvm", "linux",
+	// "java-concurrency", "product", "redis",
+	// "基础原理", "http", "kafka", "nginx", "技术架构", "zookeeper", "docker" }//
+	// ));
+
+	private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
+			new String[] { "bank" }//
+	));
+
 	public static void main(String[] args) throws IOException {
 		String baseUri = "http://ningg.top";
 		String path = "C:/Users/yinyayun/Desktop/view-source_ningg.top_category_.html";
 		// String crawlerUrl = "http://ningg.top/category/";
+		SimpleFilter filter = new SimpleFilter();
 		String saveDir = "C:/Users/yinyayun/Desktop/TEMP/pdfs";
 		Document doc = getDocument(path, baseUri);
 		Elements elements = doc.getElementsByAttributeValue("class", "tag_box list-inline");
@@ -37,9 +51,12 @@ public class GeneratePDFS {
 		for (int i = 0; i < menus.size(); i++) {
 			Menu menu = menus.get(i);
 			System.out.println(String.format("共计:%d个,正在抓取第：%d个，名称：%s", menus.size(), i + 1, menu.name));
+			if (!FILTERS.contains(menu.name)) {
+				continue;
+			}
 			Element next = doc.getElementById(menu.id).nextElementSibling();
 			String pdfName = menu.name.replace(" ", "_") + ".pdf";
-			parserAndSave(saveDir, pdfName, baseUri, next);
+			parserAndSave(saveDir, pdfName, baseUri, next, filter);
 		}
 	}
 
@@ -58,7 +75,8 @@ public class GeneratePDFS {
 	 * @param dir
 	 * @throws IOException
 	 */
-	public static void parserAndSave(String dir, String pdfName, String baseUrl, Element element) throws IOException {
+	public static void parserAndSave(String dir, String pdfName, String baseUrl, Element element, SimpleFilter filter)
+			throws IOException {
 		File dest = new File(dir, pdfName);
 		if (dest.exists()) {
 			System.out.println(pdfName + "已经存在，跳过！");
@@ -72,7 +90,7 @@ public class GeneratePDFS {
 		}
 		Utils.reverse(urls);
 
-		Html2PDF.remotePdfsToPDF(urls.toArray(new String[0]), dest.getAbsolutePath());
+		Html2PDF.remoteHtmlToPDF(urls.toArray(new String[0]), dest.getAbsolutePath(), filter);
 
 	}
 
