@@ -59,6 +59,7 @@ public class Html2PDF {
 						filter.filter(doc);
 					//
 					properties.setBaseUri(doc.baseUri());
+					properties.setOutlineHandler(OutlineHandler.createStandardHandler());
 					List<IElement> elements = HtmlConverter.convertToElements(doc.html(), properties);
 					for (IElement element : elements) {
 						document.add((IBlockElement) element);
@@ -66,7 +67,7 @@ public class Html2PDF {
 					// 添加书签
 					PdfOutline link = outlines.addOutline(title);
 					link.addDestination(PdfExplicitDestination.createFit(pdf.getPage(page)));
-					page = pdf.getNumberOfPages() + 1;
+					page = pdf.getNumberOfPages();
 				}
 			}
 		}
@@ -81,9 +82,9 @@ public class Html2PDF {
 	 */
 	public static void remotePdfsToPDF(String[] urls, String dest, ElementFilter filter) throws IOException {
 		ConverterProperties properties = properties(null);
-		PdfWriter writer = new PdfWriter(dest);
-		PdfDocument pdf = new PdfDocument(writer);
+		PdfDocument pdf = new PdfDocument(new PdfWriter(dest));
 		PdfMerger merger = new PdfMerger(pdf);
+		merger.setCloseSourceDocuments(true);
 		for (String url : urls) {
 			System.out.println("转换" + url);
 			org.jsoup.nodes.Document doc = createConnection(url).get();
@@ -93,10 +94,10 @@ public class Html2PDF {
 			properties.setBaseUri(doc.baseUri());
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			PdfDocument temp = new PdfDocument(new PdfWriter(baos));
+			properties.setOutlineHandler(OutlineHandler.createStandardHandler());
 			HtmlConverter.convertToPdf(doc.html(), temp, properties);
 			temp = new PdfDocument(new PdfReader(new ByteArrayInputStream(baos.toByteArray())));
 			merger.merge(temp, 1, temp.getNumberOfPages());
-			temp.close();
 		}
 		pdf.close();
 	}
@@ -147,7 +148,7 @@ public class Html2PDF {
 	public static Connection createConnection(String url) {
 		Connection conn = HttpConnection.connect(url);
 		conn.timeout(TIMEOUT);
-		conn.maxBodySize(5000);
+		conn.maxBodySize(1024 * 1024 * 10);
 		conn.userAgent(
 				" Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36");
 		return conn;
@@ -172,9 +173,6 @@ public class Html2PDF {
 		properties.setCharset("utf-8");
 		// 设置基础URL
 		properties.setBaseUri(baseUri);
-		//
-		properties.setOutlineHandler(OutlineHandler.createStandardHandler());
-		// properties.setTagWorkerFactory(new DefaultTagWorkerFactory());
 		//
 		return properties;
 	}

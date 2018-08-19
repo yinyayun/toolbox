@@ -22,20 +22,19 @@ import org.yinyayun.util.Utils;
  */
 public class GeneratePDFS {
 	// private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
-	// new String[] { "java", "web", "mysql", "spring", "jvm", "linux",
-	// "java-concurrency", "product", "redis",
-	// "基础原理", "http", "kafka", "nginx", "技术架构", "zookeeper", "docker" }//
+	// new String[] { "java", "web", "jvm", "java-concurrency", "http", "zookeeper"
+	// }//
 	// ));
-
 	private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
-			new String[] { "bank" }//
+			new String[] { "jvm" }//
 	));
 
 	public static void main(String[] args) throws IOException {
 		String baseUri = "http://ningg.top";
 		String path = "C:/Users/yinyayun/Desktop/view-source_ningg.top_category_.html";
 		// String crawlerUrl = "http://ningg.top/category/";
-		SimpleFilter filter = new SimpleFilter();
+		// SimpleFilter filter = new SimpleFilter();
+		SimpleFilter filter = null;
 		String saveDir = "C:/Users/yinyayun/Desktop/TEMP/pdfs";
 		Document doc = getDocument(path, baseUri);
 		Elements elements = doc.getElementsByAttributeValue("class", "tag_box list-inline");
@@ -90,6 +89,8 @@ public class GeneratePDFS {
 		}
 		Utils.reverse(urls);
 
+		// Html2PDF.remotePdfsToPDF(urls.toArray(new String[0]), dest.getAbsolutePath(),
+		// filter);
 		Html2PDF.remoteHtmlToPDF(urls.toArray(new String[0]), dest.getAbsolutePath(), filter);
 
 	}
