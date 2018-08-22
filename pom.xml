@@ -9,6 +9,7 @@
 		<module>toolbox-algorithm</module>
 		<module>toolbox-structure</module>
 		<module>toolbox-other</module>
+		<module>toolbox-nlp</module>
 	</modules>
 	<dependencies>
 		<dependency>

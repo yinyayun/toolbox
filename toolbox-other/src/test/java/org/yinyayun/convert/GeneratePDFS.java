@@ -21,13 +21,13 @@ import org.yinyayun.util.Utils;
  *
  */
 public class GeneratePDFS {
-	// private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
-	// new String[] { "java", "web", "jvm", "java-concurrency", "http", "zookeeper"
-	// }//
-	// ));
-	private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
-			new String[] { "jvm" }//
-	));
+	 private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
+	 new String[] { "java", "web", "jvm", "java-concurrency", "http", "zookeeper"
+	 }//
+	 ));
+//	private static Set<String> FILTERS = new HashSet<String>(Arrays.asList(//
+//			new String[] { "jvm" }//
+//	));
 
 	public static void main(String[] args) throws IOException {
 		String baseUri = "http://ningg.top";
