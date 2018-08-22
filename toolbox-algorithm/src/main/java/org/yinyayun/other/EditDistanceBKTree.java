@@ -25,8 +25,8 @@ public class EditDistanceBKTree {
     /**
      * 根据三角规则找子节点<br>
      * word是输入的词条，node为当前节点，y为node的子节点<br>
-     * d(word,node)<=d(x,y)+d(node,y)<br>
-     * d(node,y)>=d(word,node)-d(x,y)，其中d(x,y)最大为limitDistance<br>
+     * d(word,node)<=d(word,y)+d(node,y)<br>
+     * d(node,y)>=d(word,node)-d(word,y)，其中d(x,y)最大为limitDistance<br>
      * 
      * @param similaritys
      * @param word
