@@ -5,7 +5,7 @@ import java.util.Comparator;
 import org.yinyayun.sort.abs.Sort;
 
 /**
- * 归并排序
+ * 归并排序核心思想在于合并两个有序列 （1）二分，直到两个序列的长度各位1 （2）合并两个有序列
  * 
  * @author yinyayun
  *

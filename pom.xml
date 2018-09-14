@@ -10,6 +10,7 @@
 		<module>toolbox-structure</module>
 		<module>toolbox-other</module>
 		<module>toolbox-nlp</module>
+		<module>toolbox-solr</module>
 	</modules>
 	<dependencies>
 		<dependency>

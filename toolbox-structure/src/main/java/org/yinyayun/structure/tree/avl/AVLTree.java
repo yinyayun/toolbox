@@ -1,5 +1,7 @@
 package org.yinyayun.structure.tree.avl;
 
+import java.util.LinkedList;
+
 /**
  * 平衡二叉搜索树,任何一个节点大于左子节点，小于右子节点
  * 
@@ -188,5 +190,20 @@ public class AVLTree<T> {
 
 	private int height(AVLNode<T> node) {
 		return node == null ? -1 : node.height;
+	}
+
+	public void print(AVLNode<T> root) {
+		LinkedList<AVLNode<T>> queue = new LinkedList<AVLNode<T>>();
+		queue.add(root);
+		while (queue.size() > 0) {
+			AVLNode<T> node = queue.pop();
+			System.out.println(node.key);
+			if (node.left != null) {
+				queue.add(node.left);
+			}
+			if (node.right != null) {
+				queue.add(node.right);
+			}
+		}
 	}
 }

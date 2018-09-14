@@ -1,0 +1,2 @@
+**start**
+java SolrJettyServer {}
