@@ -11,6 +11,7 @@
 		<module>toolbox-other</module>
 		<module>toolbox-nlp</module>
 		<module>toolbox-solr</module>
+		<module>toolbox-springboot</module>
 	</modules>
 	<dependencies>
 		<dependency>

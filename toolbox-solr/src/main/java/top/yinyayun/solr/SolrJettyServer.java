@@ -1,6 +1,8 @@
 package top.yinyayun.solr;
 
 import java.io.File;
+import java.util.Enumeration;
+import java.util.Map;
 
 import org.apache.log4j.LogManager;
 import org.eclipse.jetty.server.Server;
@@ -29,8 +31,15 @@ public class SolrJettyServer {
 		//
 		Resource fileserverXml = Resource.newResource(new File(base, "/etc/jetty.xml"));
 		XmlConfiguration configuration = new XmlConfiguration(fileserverXml.getInputStream());
+		// 系统配置注入
+		Map<String, String> jettyProperties = configuration.getProperties();
+		Enumeration<?> props = System.getProperties().propertyNames();
+		while (props.hasMoreElements()) {
+			String name = (String) props.nextElement();
+			jettyProperties.put(name, System.getProperty(name));
+		}
+		//
 		Server server = (Server) configuration.configure();
-
 		server.start();
 		server.join();
 	}

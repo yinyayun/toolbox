@@ -103,63 +103,63 @@
         <Set name="acceptQueueSize"><Property name="solr.jetty.http.acceptQueueSize" default="0"/></Set>
       </New>
     </Arg>
-  </Call>
+   </Call>
 
-    <!-- =========================================================== -->
-    <!-- RewriteHandle to redirect root to Solr                      -->
-    <!-- =========================================================== -->
-     <New id="RewriteHandler" class="org.eclipse.jetty.rewrite.handler.RewriteHandler">
-      <Set name="rewriteRequestURI">true</Set>
-      <Set name="rewritePathInfo">false</Set>
-      <Set name="originalPathAttribute">requestedPath</Set>
+   <!-- =========================================================== -->
+   <!-- RewriteHandle to redirect root to Solr                      -->
+   <!-- =========================================================== -->
+    <New id="RewriteHandler" class="org.eclipse.jetty.rewrite.handler.RewriteHandler">
+     <Set name="rewriteRequestURI">true</Set>
+     <Set name="rewritePathInfo">false</Set>
+     <Set name="originalPathAttribute">requestedPath</Set>
 
+     <Call name="addRule">
+       <Arg>
+         <New class="org.eclipse.jetty.rewrite.handler.RedirectRegexRule">
+           <Set name="regex">^/$</Set>
+           <Set name="replacement">/solr/</Set>
+         </New>
+       </Arg>
+     </Call>
       <Call name="addRule">
         <Arg>
-          <New class="org.eclipse.jetty.rewrite.handler.RedirectRegexRule">
-            <Set name="regex">^/$</Set>
-            <Set name="replacement">/solr/</Set>
+          <New class="org.eclipse.jetty.rewrite.handler.RewritePatternRule">
+            <Set name="pattern">/v2/*</Set>
+            <Set name="replacement">/solr/____v2</Set>
           </New>
         </Arg>
       </Call>
-       <Call name="addRule">
-         <Arg>
-           <New class="org.eclipse.jetty.rewrite.handler.RewritePatternRule">
-             <Set name="pattern">/v2/*</Set>
-             <Set name="replacement">/solr/____v2</Set>
-           </New>
-         </Arg>
-       </Call>
-       <Call name="addRule">
-         <Arg>
-           <New class="org.eclipse.jetty.rewrite.handler.RewritePatternRule">
-             <Set name="pattern">/api/*</Set>
-             <Set name="replacement">/solr/____v2</Set>
-           </New>
-         </Arg>
-       </Call>
-       <Set name="handler">
-         <New id="Handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
-           <Set name="handlers">
-             <Array type="org.eclipse.jetty.server.Handler">
-               <Item>
-                 <New id="Contexts" class="org.eclipse.jetty.server.handler.ContextHandlerCollection"/>
-               </Item>
-               <Item>
-                 <New id="InstrumentedHandler" class="com.codahale.metrics.jetty9.InstrumentedHandler">
-                   <Arg><Ref refid="solrJettyMetricRegistry"/></Arg>
-                   <Set name="handler">
-                     <New id="DefaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler"/>
-                   </Set>
-                 </New>
-               </Item>
-               <Item>
-                 <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler"/>
-               </Item>
-             </Array>
-           </Set>
-         </New>
-       </Set>
-     </New>
+      <Call name="addRule">
+        <Arg>
+          <New class="org.eclipse.jetty.rewrite.handler.RewritePatternRule">
+            <Set name="pattern">/api/*</Set>
+            <Set name="replacement">/solr/____v2</Set>
+          </New>
+        </Arg>
+      </Call>
+      <Set name="handler">
+        <New id="Handlers" class="org.eclipse.jetty.server.handler.HandlerCollection">
+          <Set name="handlers">
+            <Array type="org.eclipse.jetty.server.Handler">
+              <Item>
+                <New id="Contexts" class="org.eclipse.jetty.server.handler.ContextHandlerCollection"/>
+              </Item>
+              <Item>
+                <New id="InstrumentedHandler" class="com.codahale.metrics.jetty9.InstrumentedHandler">
+                  <Arg><Ref refid="solrJettyMetricRegistry"/></Arg>
+                  <Set name="handler">
+                    <New id="DefaultHandler" class="org.eclipse.jetty.server.handler.DefaultHandler"/>
+                  </Set>
+                </New>
+              </Item>
+              <Item>
+                <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler"/>
+              </Item>
+            </Array>
+          </Set>
+        </New>
+      </Set>
+    </New>
 
     <!-- =========================================================== -->
     <!-- Set handler Collection Structure                            -->
@@ -183,7 +183,7 @@
             <Ref refid="Contexts" />
           </Set>
           <Call name="setContextAttribute">
-            <Arg>org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern</Arg>
+            <Arg>org.eclipse.jetty.server.webapp.containerincludejarpattern</Arg>
             <Arg>.*/servlet-api-[^/]*\.jar$</Arg>
           </Call>
 
