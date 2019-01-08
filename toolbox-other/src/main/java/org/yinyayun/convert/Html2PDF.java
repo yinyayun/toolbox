@@ -35,7 +35,64 @@ import com.itextpdf.layout.font.FontProvider;
  *
  */
 public class Html2PDF {
-	public static int TIMEOUT = 15000;
+	public static int TIMEOUT = 30000;
+
+	public static void remoteHtmlToPDF(String[] urls, String dest, ElementFilter2One filter, int time, String ip,
+			int port) throws IOException {
+		int page = 1;
+		ConverterProperties properties = properties(null);
+		try (PdfWriter writer = new PdfWriter(dest)) {
+			PdfDocument pdf = new PdfDocument(writer);
+			PdfOutline outlines = pdf.getOutlines(false);
+			try (Document document = new Document(pdf)) {
+				for (String url : urls) {
+					System.out.println("转换" + url);
+					org.jsoup.nodes.Document doc = createConnection(url, time, ip, port).get();
+					String title = title(doc);
+					properties.setBaseUri(doc.baseUri());
+					properties.setOutlineHandler(OutlineHandler.createStandardHandler());
+					List<IElement> elements = HtmlConverter.convertToElements(filter.convert(doc).html(), properties);
+					for (IElement element : elements) {
+						document.add((IBlockElement) element);
+					}
+					// 添加书签
+					PdfOutline link = outlines.addOutline(title);
+					link.addDestination(PdfExplicitDestination.createFit(pdf.getPage(page)));
+					page = pdf.getNumberOfPages();
+				}
+			}
+		}
+	}
+
+	public static void remoteHtmlToPDF(String[] urls, String dest, ElementFilter filter, int time, String ip, int port)
+			throws IOException {
+		int page = 1;
+		ConverterProperties properties = properties(null);
+		try (PdfWriter writer = new PdfWriter(dest)) {
+			PdfDocument pdf = new PdfDocument(writer);
+			PdfOutline outlines = pdf.getOutlines(false);
+			try (Document document = new Document(pdf)) {
+				for (String url : urls) {
+					System.out.println("转换" + url);
+					org.jsoup.nodes.Document doc = createConnection(url, time, ip, port).get();
+					String title = title(doc);
+					if (filter != null)
+						filter.filter(doc);
+					//
+					properties.setBaseUri(doc.baseUri());
+					properties.setOutlineHandler(OutlineHandler.createStandardHandler());
+					List<IElement> elements = HtmlConverter.convertToElements(doc.html(), properties);
+					for (IElement element : elements) {
+						document.add((IBlockElement) element);
+					}
+					// 添加书签
+					PdfOutline link = outlines.addOutline(title);
+					link.addDestination(PdfExplicitDestination.createFit(pdf.getPage(page)));
+					page = pdf.getNumberOfPages();
+				}
+			}
+		}
+	}
 
 	/**
 	 * 无法根据html标签生成书签，目前采用html标题生成书签
@@ -146,8 +203,22 @@ public class Html2PDF {
 	}
 
 	public static Connection createConnection(String url) {
+		return createConnection(url, TIMEOUT);
+	}
+
+	public static Connection createConnection(String url, int time) {
 		Connection conn = HttpConnection.connect(url);
-		conn.timeout(TIMEOUT);
+		conn.timeout(time);
+		conn.maxBodySize(1024 * 1024 * 10);
+		conn.userAgent(
+				" Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36");
+		return conn;
+	}
+
+	public static Connection createConnection(String url, int time, String ip, int port) {
+		Connection conn = HttpConnection.connect(url);
+		conn.proxy(ip, port);
+		conn.timeout(time);
 		conn.maxBodySize(1024 * 1024 * 10);
 		conn.userAgent(
 				" Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36");

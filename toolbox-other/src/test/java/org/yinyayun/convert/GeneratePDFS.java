@@ -35,7 +35,7 @@ public class GeneratePDFS {
 		// String crawlerUrl = "http://ningg.top/category/";
 		// SimpleFilter filter = new SimpleFilter();
 		SimpleFilter filter = null;
-		String saveDir = "C:/Users/yinyayun/Desktop/TEMP/pdfs";
+		String saveDir = "/home/yinyayun/tmp/pdfs";
 		Document doc = getDocument(path, baseUri);
 		Elements elements = doc.getElementsByAttributeValue("class", "tag_box list-inline");
 		List<Menu> menus = new ArrayList<Menu>();
