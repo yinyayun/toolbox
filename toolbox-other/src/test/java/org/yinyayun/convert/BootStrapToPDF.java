@@ -33,8 +33,8 @@ public class BootStrapToPDF {
 		if (dest.exists()) {
 			dest.delete();
 		}
-		Html2PDF.remoteHtmlToPDF(urls.toArray(new String[0]), dest.getAbsolutePath(), filter, 30000, "192.168.16.187",
-				8080);
+		Html2PDF.remoteHtmlToPDF(urls.toArray(new String[0]), dest.getAbsolutePath(), filter, 30000, "IP",
+				80);
 
 	}
 
@@ -43,7 +43,7 @@ public class BootStrapToPDF {
 	}
 
 	public static Document getDocument(String url) throws IOException {
-		Connection conn = Html2PDF.createConnection(url, 15000, "192.168.16.232", 8080);
+		Connection conn = Html2PDF.createConnection(url, 15000, "ip", 80);
 		return conn.get();
 	}
 
